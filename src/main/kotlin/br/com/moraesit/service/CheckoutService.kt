@@ -14,7 +14,8 @@ class CheckoutService(
         CommonUtil.startTimer()
 
         val priceValidationList = cart.carItemList
-            .stream()
+            //.stream()
+            .parallelStream()
             .map {
                 val isPriceInvalid = priceValidatorService.isCartItemInvalid(it)
                 it.isExpired = isPriceInvalid
