@@ -1,6 +1,7 @@
 package br.com.moraesit.parallelstreams
 
 import br.com.moraesit.util.CommonUtil
+import java.util.*
 import java.util.stream.Collectors
 
 fun main() {
@@ -41,7 +42,19 @@ fun stringTransform_parellel(namesList: List<String>): List<String> {
         .collect(Collectors.toList())
 }
 
+fun lowerCaseTransformParallel(namesList: List<String>): List<String> {
+    return namesList
+        .parallelStream()
+        .map { lowerCaseTransform(it) }
+        .collect(Collectors.toList())
+}
+
 fun addNameLengthTransform(name: String): String {
     CommonUtil.delay(500)
     return "${name.length}-${name}"
+}
+
+fun lowerCaseTransform(name: String): String {
+    CommonUtil.delay(500)
+    return name.lowercase(Locale.getDefault())
 }
