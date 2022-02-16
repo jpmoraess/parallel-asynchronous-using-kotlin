@@ -5,11 +5,22 @@ import br.com.moraesit.domain.checkout.CartItem
 import br.com.moraesit.domain.checkout.CheckoutStatus
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.util.concurrent.ForkJoinPool
 import kotlin.random.Random
 import kotlin.test.assertEquals
 
 class CheckoutServiceTest {
     private val checkoutService = CheckoutService(PriceValidatorService())
+
+    @Test
+    fun noOfCores() {
+        println("no of cores: ${Runtime.getRuntime().availableProcessors()}")
+    }
+
+    @Test
+    fun parallelism() {
+        println("parallelism: ${ForkJoinPool.getCommonPoolParallelism()}")
+    }
 
     @Test
     fun checkout_6_items() {
