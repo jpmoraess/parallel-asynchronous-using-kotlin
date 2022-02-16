@@ -25,10 +25,31 @@ class CheckoutService(
             .collect(Collectors.toList())
 
         if (priceValidationList.size > 0)
-            return CheckoutResponse(CheckoutStatus.FAILURE, priceValidationList)
+            return CheckoutResponse(CheckoutStatus.FAILURE, priceValidationList, 0.0)
+
+        //val finalPrice = calculateFinalPrice(cart)
+        val finalPrice = calculateFinalPriceReduce(cart)
+        println("Checkout Complete and the final price is: $finalPrice")
 
         CommonUtil.timeTaken()
 
-        return CheckoutResponse(CheckoutStatus.SUCCESS, emptyList())
+        return CheckoutResponse(CheckoutStatus.SUCCESS, emptyList(), finalPrice)
+    }
+
+    fun calculateFinalPrice(cart: Cart): Double {
+//        return cart.carItemList.parallelStream()
+//            .map { it.price * it.quantity }
+//            .collect(summingDouble(Double::toDouble))
+
+        return cart.carItemList.parallelStream()
+            .map { it.price * it.quantity }
+            .mapToDouble(Double::toDouble)
+            .sum()
+    }
+
+    fun calculateFinalPriceReduce(cart: Cart): Double {
+        return cart.carItemList.parallelStream()
+            .map { it.price * it.quantity }
+            .reduce(0.0) { x, y -> x + y }
     }
 }

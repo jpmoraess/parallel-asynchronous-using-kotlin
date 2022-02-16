@@ -3,6 +3,7 @@ package br.com.moraesit.service
 import br.com.moraesit.domain.checkout.Cart
 import br.com.moraesit.domain.checkout.CartItem
 import br.com.moraesit.domain.checkout.CheckoutStatus
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import kotlin.random.Random
 import kotlin.test.assertEquals
@@ -20,7 +21,7 @@ class CheckoutServiceTest {
 
         //then
         assertEquals(CheckoutStatus.SUCCESS, checkoutResponse.checkoutStatus)
-
+        assertTrue(checkoutResponse.finalPrice > 0.0)
     }
 
     @Test
@@ -40,7 +41,7 @@ class CheckoutServiceTest {
         val cart = Cart(1, mutableListOf())
         IntRange(1, noOfItems).forEachIndexed { index, _ ->
             val itemName = "CartItem-$index"
-            val cartItem = CartItem(index, itemName, Random.nextDouble(20.0, 200.0), index, false)
+            val cartItem = CartItem(index, itemName, Random.nextDouble(20.0, 200.0), index + 1, false)
             cart.carItemList.add(cartItem)
         }
         return cart
