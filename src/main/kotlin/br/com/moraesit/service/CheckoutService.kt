@@ -32,6 +32,7 @@ class CheckoutService(
         println("Checkout Complete and the final price is: $finalPrice")
 
         CommonUtil.timeTaken()
+        CommonUtil.stopWatchReset()
 
         return CheckoutResponse(CheckoutStatus.SUCCESS, emptyList(), finalPrice)
     }

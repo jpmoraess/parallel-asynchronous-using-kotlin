@@ -48,6 +48,21 @@ class CheckoutServiceTest {
 
     }
 
+    @Test
+    fun modify_parallelism() {
+        //given
+        System.setProperty("java.util.concurrent.ForkJoinPool.common.parallelism", "100")
+
+        val cart = cartGenerator(100)
+
+        //when
+        val checkoutResponse = checkoutService.checkout(cart)
+
+        //then
+        assertEquals(CheckoutStatus.FAILURE, checkoutResponse.checkoutStatus)
+
+    }
+
     private fun cartGenerator(noOfItems: Int): Cart {
         val cart = Cart(1, mutableListOf())
         IntRange(1, noOfItems).forEachIndexed { index, _ ->
