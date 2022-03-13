@@ -11,4 +11,9 @@ class CompletableFutureHelloWorld {
         return CompletableFuture.supplyAsync { hws.helloWorld() }
             .thenApply { it.uppercase(Locale.getDefault()) }
     }
+
+    fun lengthOfString(): CompletableFuture<String> {
+        return CompletableFuture.supplyAsync { hws.helloWorld() }
+            .thenApply { "${it.length} - $it" }
+    }
 }

@@ -16,4 +16,14 @@ class CompletableFutureHelloWorldTest {
                 assertEquals("HELLO WORLD", it)
             }.join()
     }
+
+    @Test
+    fun lengthOfString() {
+        val completableFuture = cfhw.lengthOfString()
+
+        completableFuture
+            .thenAccept {
+                assertEquals("11 - hello world", it)
+            }.join()
+    }
 }
