@@ -20,13 +20,30 @@ class CompletableFutureHelloWorld {
         val hello = CompletableFuture.supplyAsync { hws.hello() }
         val world = CompletableFuture.supplyAsync { hws.world() }
 
-        val helloWorld =  hello.thenCombine(world) { h, w -> h + w }
+        val helloWorld = hello.thenCombine(world) { h, w -> h + w }
             .thenApply { it.uppercase(Locale.getDefault()) }
             .join()
 
         timeTaken()
 
         return helloWorld
+    }
+
+    fun helloworld_3_async_calls(): String {
+        startTimer()
+
+        val hi = CompletableFuture.supplyAsync { hws.hiCompletableFuture() }
+        val hello = CompletableFuture.supplyAsync { hws.hello() }
+        val world = CompletableFuture.supplyAsync { hws.world() }
+
+        val hiHelloWorld = hi.thenCombine(hello) { h, he -> h + he }
+            .thenCombine(world) { hhe, w -> hhe + w }
+            .thenApply { it.uppercase(Locale.getDefault()) }
+            .join()
+
+        timeTaken()
+
+        return hiHelloWorld
     }
 
     fun lengthOfString(): CompletableFuture<String> {

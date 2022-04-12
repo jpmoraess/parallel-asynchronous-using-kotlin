@@ -25,6 +25,13 @@ class CompletableFutureHelloWorldTest {
     }
 
     @Test
+    fun helloworld_3_async_calls() {
+        val hiHelloWorld = cfhw.helloworld_3_async_calls()
+
+        assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", hiHelloWorld)
+    }
+
+    @Test
     fun lengthOfString() {
         val completableFuture = cfhw.lengthOfString()
 

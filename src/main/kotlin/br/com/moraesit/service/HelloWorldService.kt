@@ -21,4 +21,9 @@ class HelloWorldService {
         println("inside world")
         return "world!"
     }
+
+    fun hiCompletableFuture(): String {
+        delay(1000)
+        return "Hi CompletableFuture "
+    }
 }
