@@ -13,7 +13,7 @@ class HelloWorldService {
     fun hello(): String {
         delay(1000)
         println("inside hello")
-        return "hello"
+        return "hello "
     }
 
     fun world(): String {
