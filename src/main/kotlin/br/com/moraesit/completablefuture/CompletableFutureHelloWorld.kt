@@ -46,6 +46,11 @@ class CompletableFutureHelloWorld {
         return hiHelloWorld
     }
 
+    fun helloWorldThenCompose(): CompletableFuture<String> {
+        return CompletableFuture.supplyAsync { hws.hello() }
+            .thenCompose { prev -> hws.worldFuture(prev) }
+    }
+
     fun lengthOfString(): CompletableFuture<String> {
         return CompletableFuture.supplyAsync { hws.helloWorld() }
             .thenApply { "${it.length} - $it" }

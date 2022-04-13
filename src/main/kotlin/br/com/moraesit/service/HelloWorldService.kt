@@ -1,6 +1,7 @@
 package br.com.moraesit.service
 
 import br.com.moraesit.util.CommonUtil.Companion.delay
+import java.util.concurrent.CompletableFuture
 
 class HelloWorldService {
 
@@ -25,5 +26,12 @@ class HelloWorldService {
     fun hiCompletableFuture(): String {
         delay(1000)
         return "Hi CompletableFuture "
+    }
+
+    fun worldFuture(input: String): CompletableFuture<String> {
+        return CompletableFuture.supplyAsync {
+            delay(1000)
+            return@supplyAsync "${input}world!"
+        }
     }
 }

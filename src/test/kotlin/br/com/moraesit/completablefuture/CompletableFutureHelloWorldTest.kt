@@ -1,5 +1,7 @@
 package br.com.moraesit.completablefuture
 
+import br.com.moraesit.util.CommonUtil.Companion.startTimer
+import br.com.moraesit.util.CommonUtil.Companion.timeTaken
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
@@ -29,6 +31,20 @@ class CompletableFutureHelloWorldTest {
         val hiHelloWorld = cfhw.helloworld_3_async_calls()
 
         assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", hiHelloWorld)
+    }
+
+    @Test
+    fun helloWorldThenCompose() {
+        startTimer()
+
+        val completableFuture = cfhw.helloWorldThenCompose()
+
+        completableFuture
+            .thenAccept {
+                assertEquals("hello world!", it)
+            }.join()
+
+        timeTaken()
     }
 
     @Test
