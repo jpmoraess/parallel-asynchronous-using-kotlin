@@ -21,6 +21,18 @@ class ProductInfoService {
                 size = "128GB"
                 color = "Black"
                 price = BigDecimal(3000.00)
+            },
+            ProductOption().apply {
+                productOptionId = 3
+                size = "128GB"
+                color = "Black"
+                price = BigDecimal(3000.00)
+            },
+            ProductOption().apply {
+                productOptionId = 4
+                size = "128GB"
+                color = "Black"
+                price = BigDecimal(3000.00)
             })
         return ProductInfo().apply {
             this.productId = productId

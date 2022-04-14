@@ -62,4 +62,22 @@ class ProductServiceUsingCompletableFutureTest {
         }
         assertNotNull(product.review)
     }
+
+    @Test
+    fun retrieveProductDetailsWithInventory_approach2() {
+        // given
+        val productId = "ABC123"
+
+        // when
+        val product = service.retrieveProductDetailsWithInventory_approach2(productId)
+
+        // then
+        assertNotNull(product)
+        assertTrue(product.productInfo!!.productOptions.size > 0)
+        product.productInfo!!.productOptions.forEach { productOption ->
+            assertNotNull(productOption.inventory)
+            assertEquals(productOption.inventory!!.count, 2)
+        }
+        assertNotNull(product.review)
+    }
 }
