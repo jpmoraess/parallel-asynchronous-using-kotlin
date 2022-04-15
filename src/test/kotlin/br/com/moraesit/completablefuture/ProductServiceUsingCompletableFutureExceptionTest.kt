@@ -4,14 +4,14 @@ import br.com.moraesit.MockitoHelper
 import br.com.moraesit.service.InventoryService
 import br.com.moraesit.service.ProductInfoService
 import br.com.moraesit.service.ReviewService
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.mockito.InjectMocks
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.anyString
+import org.mockito.Mockito.*
 import org.mockito.junit.jupiter.MockitoExtension
 import kotlin.test.assertEquals
 
@@ -52,5 +52,20 @@ class ProductServiceUsingCompletableFutureExceptionTest {
         assertNotNull(product.review)
         assertEquals(0, product.review!!.noOfReview)
         assertEquals(0.0, product.review!!.overallRating)
+    }
+
+    @Test
+    fun retrieveProductDetailsWithInventory_productInfoServiceError() {
+        // given
+        val productId = "ABC123"
+
+        `when`(productInfoServiceMock.retrieveProductInfo(anyString())).thenThrow(RuntimeException("Exception Occured"))
+        `when`(reviewServiceMock.retriveReview(anyString())).thenCallRealMethod()
+        //`when`(inventoryServiceMock.retrieveInventory(MockitoHelper.anyObject())).thenCallRealMethod()
+
+        // then
+        Assertions.assertThrows(RuntimeException::class.java) {
+            pscf.retrieveProductDetailsWithInventory_approach2(productId)
+        }
     }
 }

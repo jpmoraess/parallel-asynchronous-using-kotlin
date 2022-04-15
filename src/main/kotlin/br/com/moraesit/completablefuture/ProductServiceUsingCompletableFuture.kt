@@ -57,15 +57,19 @@ class ProductServiceUsingCompletableFuture(
                 productInfo.productOptions = updateInventory_approach2(productInfo)
                 return@thenApply productInfo
             }
+
         val cfReview = CompletableFuture.supplyAsync { reviewService.retriveReview(productId) }
             .exceptionally { e ->
                 System.err.println("Handled the Exception in ReviewService: ${e.message}")
                 return@exceptionally Review(noOfReview = 0, overallRating = 0.0)
             }
 
-        val product = cfProductInfo.thenCombine(cfReview) { productInfo, review ->
-            Product(productId, productInfo, review)
-        }.join() // block the thread
+        val product = cfProductInfo
+            .thenCombine(cfReview) { productInfo, review -> Product(productId, productInfo, review) }
+            .whenComplete { product1, ex ->
+                System.err.println("inside the whenComplete $product1 and the exception is: ${ex.message}")
+            }
+            .join() // block the thread
 
         CommonUtil.timeTaken()
         return product
