@@ -22,6 +22,10 @@ class CompletableFutureHelloWorldException {
                 return@handle ""
             }
                 .thenCombine(hello) { h, he -> h + he }
+                .handle { _, e ->
+                    System.err.println("Exception 2 is: $e")
+                    return@handle ""
+                }
                 .thenCombine(world) { hhe, w -> hhe + w }
                 .thenApply { it.uppercase(Locale.getDefault()) }
                 .join()
