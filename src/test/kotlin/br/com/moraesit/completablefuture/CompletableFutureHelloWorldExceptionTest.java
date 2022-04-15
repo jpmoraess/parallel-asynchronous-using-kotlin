@@ -84,4 +84,30 @@ public class CompletableFutureHelloWorldExceptionTest {
         // then
         assertEquals("WORLD!", result);
     }
+
+    @Test
+    void helloworld_3_async_calls_whenComplete() {
+        // given
+        lenient().when(helloWorldService.hiCompletableFuture()).thenCallRealMethod();
+        lenient().when(helloWorldService.hello()).thenCallRealMethod();
+
+        // when
+        final String result = cfwe.helloworld_3_async_calls_whenComplete();
+
+        // then
+        assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", result);
+    }
+
+    @Test
+    void helloworld_3_async_calls_whenComplete_2() {
+        // given
+        lenient().when(helloWorldService.hiCompletableFuture()).thenThrow(new RuntimeException("Exception Ocurred"));
+        lenient().when(helloWorldService.hello()).thenThrow(new RuntimeException("Exception Ocurred"));
+
+        // when
+        final String result = cfwe.helloworld_3_async_calls_whenComplete();
+
+        // then
+        assertEquals("WORLD!", result);
+    }
 }

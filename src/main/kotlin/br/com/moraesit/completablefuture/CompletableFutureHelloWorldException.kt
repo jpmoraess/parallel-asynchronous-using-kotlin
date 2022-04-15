@@ -68,4 +68,34 @@ class CompletableFutureHelloWorldException {
 
         return hiHelloWorld
     }
+
+    fun helloworld_3_async_calls_whenComplete(): String {
+        CommonUtil.startTimer()
+
+        val hi = CompletableFuture.supplyAsync { hws.hiCompletableFuture() }
+        val hello = CompletableFuture.supplyAsync { hws.hello() }
+        val world = CompletableFuture.supplyAsync { hws.world() }
+
+        val hiHelloWorld =
+            hi.whenComplete { res, e ->
+                println("res is: $res")
+                if (e != null) {
+                    System.err.println("Exception is: $e")
+                }
+            }
+                .thenCombine(hello) { h, he -> h + he }
+                .whenComplete { res, e ->
+                    println("res is 2: $res")
+                    if (e != null) {
+                        System.err.println("Exception is 2: $e")
+                    }
+                }
+                .thenCombine(world) { hhe, w -> hhe + w }
+                .thenApply { it.uppercase(Locale.getDefault()) }
+                .join()
+
+        CommonUtil.timeTaken()
+
+        return hiHelloWorld
+    }
 }
