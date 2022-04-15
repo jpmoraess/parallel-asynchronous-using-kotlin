@@ -17,14 +17,22 @@ class CompletableFutureHelloWorldException {
         val world = CompletableFuture.supplyAsync { hws.world() }
 
         val hiHelloWorld =
-            hi.handle { _, e ->
-                System.err.println("Exception is: $e")
-                return@handle ""
+            hi.handle { res, e ->
+                if (e != null) {
+                    System.err.println("Exception is: $e")
+                    return@handle ""
+                } else {
+                    return@handle res
+                }
             }
                 .thenCombine(hello) { h, he -> h + he }
-                .handle { _, e ->
-                    System.err.println("Exception 2 is: $e")
-                    return@handle ""
+                .handle { res, e ->
+                    if (e != null) {
+                        System.err.println("Exception is 2: $e")
+                        return@handle ""
+                    } else {
+                        return@handle res
+                    }
                 }
                 .thenCombine(world) { hhe, w -> hhe + w }
                 .thenApply { it.uppercase(Locale.getDefault()) }

@@ -8,7 +8,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.mock;
 
 @ExtendWith(MockitoExtension.class)
 public class CompletableFutureHelloWorldExceptionTest {
@@ -43,5 +44,18 @@ public class CompletableFutureHelloWorldExceptionTest {
 
         // then
         assertEquals("WORLD!", result);
+    }
+
+    @Test
+    void helloworld_3_async_calls_handle_3() {
+        // given
+        lenient().when(helloWorldService.hiCompletableFuture()).thenCallRealMethod();
+        lenient().when(helloWorldService.hello()).thenCallRealMethod();
+
+        // when
+        final String result = cfwe.helloworld_3_async_calls_handle();
+
+        // then
+        assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", result);
     }
 }
