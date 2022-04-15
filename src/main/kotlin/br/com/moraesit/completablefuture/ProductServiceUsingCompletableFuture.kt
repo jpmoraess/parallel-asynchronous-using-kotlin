@@ -3,6 +3,7 @@ package br.com.moraesit.completablefuture
 import br.com.moraesit.domain.Product
 import br.com.moraesit.domain.ProductInfo
 import br.com.moraesit.domain.ProductOption
+import br.com.moraesit.domain.Review
 import br.com.moraesit.service.InventoryService
 import br.com.moraesit.service.ProductInfoService
 import br.com.moraesit.service.ReviewService
@@ -57,6 +58,10 @@ class ProductServiceUsingCompletableFuture(
                 return@thenApply productInfo
             }
         val cfReview = CompletableFuture.supplyAsync { reviewService.retriveReview(productId) }
+            .exceptionally { e ->
+                System.err.println("Handled the Exception in ReviewService: ${e.message}")
+                return@exceptionally Review(noOfReview = 0, overallRating = 0.0)
+            }
 
         val product = cfProductInfo.thenCombine(cfReview) { productInfo, review ->
             Product(productId, productInfo, review)
