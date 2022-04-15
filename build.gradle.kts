@@ -14,6 +14,9 @@ repositories {
 
 dependencies {
     implementation("org.apache.commons:commons-lang3:3.0")
+    testImplementation("org.mockito:mockito-core:3.2.4")
+    testImplementation("org.mockito:mockito-junit-jupiter:3.2.4")
+    testImplementation("org.mockito:mockito-inline:3.2.4")
     testImplementation(kotlin("test"))
 }
 
