@@ -5,6 +5,7 @@ import br.com.moraesit.util.CommonUtil.Companion.startTimer
 import br.com.moraesit.util.CommonUtil.Companion.timeTaken
 import java.util.*
 import java.util.concurrent.CompletableFuture
+import java.util.concurrent.Executors
 
 class CompletableFutureHelloWorld {
     private val hws = HelloWorldService()
@@ -52,6 +53,34 @@ class CompletableFutureHelloWorld {
         val hi = CompletableFuture.supplyAsync { hws.hiCompletableFuture() }
         val hello = CompletableFuture.supplyAsync { hws.hello() }
         val world = CompletableFuture.supplyAsync { hws.world() }
+
+        val hiHelloWorld = hi.thenCombine(hello) { h, he ->
+            println("[${Thread.currentThread().name}]: inside hi.thenCombine")
+            return@thenCombine h + he
+        }
+            .thenCombine(world) { hhe, w ->
+                println("[${Thread.currentThread().name}]: inside world.thenCombine")
+                return@thenCombine hhe + w
+            }
+            .thenApply {
+                println("[${Thread.currentThread().name}]: inside thenApply")
+                it.uppercase(Locale.getDefault())
+            }
+            .join()
+
+        timeTaken()
+
+        return hiHelloWorld
+    }
+
+    fun helloworld_3_async_calls_custom_threadpool(): String {
+        startTimer()
+
+        val executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
+
+        val hi = CompletableFuture.supplyAsync({ hws.hiCompletableFuture() }, executorService)
+        val hello = CompletableFuture.supplyAsync({ hws.hello() }, executorService)
+        val world = CompletableFuture.supplyAsync({ hws.world() }, executorService)
 
         val hiHelloWorld = hi.thenCombine(hello) { h, he ->
             println("[${Thread.currentThread().name}]: inside hi.thenCombine")
