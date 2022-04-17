@@ -34,6 +34,13 @@ class CompletableFutureHelloWorldTest {
     }
 
     @Test
+    fun helloworld_3_async_calls_log() {
+        val hiHelloWorld = cfhw.helloworld_3_async_calls_log()
+
+        assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", hiHelloWorld)
+    }
+
+    @Test
     fun helloWorldThenCompose() {
         startTimer()
 
