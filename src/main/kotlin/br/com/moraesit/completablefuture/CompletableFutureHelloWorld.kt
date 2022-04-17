@@ -73,6 +73,32 @@ class CompletableFutureHelloWorld {
         return hiHelloWorld
     }
 
+    fun helloworld_3_async_calls_log_async(): String {
+        startTimer()
+
+        val hi = CompletableFuture.supplyAsync { hws.hiCompletableFuture() }
+        val hello = CompletableFuture.supplyAsync { hws.hello() }
+        val world = CompletableFuture.supplyAsync { hws.world() }
+
+        val hiHelloWorld = hi.thenCombineAsync(hello) { h, he ->
+            println("[${Thread.currentThread().name}]: inside hi.thenCombineAsync")
+            return@thenCombineAsync h + he
+        }
+            .thenCombineAsync(world) { hhe, w ->
+                println("[${Thread.currentThread().name}]: inside world.thenCombineAsync")
+                return@thenCombineAsync hhe + w
+            }
+            .thenApplyAsync {
+                println("[${Thread.currentThread().name}]: inside thenApplyAsync")
+                return@thenApplyAsync it.uppercase(Locale.getDefault())
+            }
+            .join()
+
+        timeTaken()
+
+        return hiHelloWorld
+    }
+
     fun helloworld_3_async_calls_custom_threadpool(): String {
         startTimer()
 
@@ -94,6 +120,34 @@ class CompletableFutureHelloWorld {
                 println("[${Thread.currentThread().name}]: inside thenApply")
                 it.uppercase(Locale.getDefault())
             }
+            .join()
+
+        timeTaken()
+
+        return hiHelloWorld
+    }
+
+    fun helloworld_3_async_calls_custom_threadpool_async(): String {
+        startTimer()
+
+        val executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors())
+
+        val hi = CompletableFuture.supplyAsync({ hws.hiCompletableFuture() }, executorService)
+        val hello = CompletableFuture.supplyAsync({ hws.hello() }, executorService)
+        val world = CompletableFuture.supplyAsync({ hws.world() }, executorService)
+
+        val hiHelloWorld = hi.thenCombineAsync(hello, { h, he ->
+            println("[${Thread.currentThread().name}]: inside hi.thenCombine")
+            return@thenCombineAsync h + he
+        }, executorService)
+            .thenCombineAsync(world, { hhe, w ->
+                println("[${Thread.currentThread().name}]: inside world.thenCombine")
+                return@thenCombineAsync hhe + w
+            }, executorService)
+            .thenApplyAsync({
+                println("[${Thread.currentThread().name}]: inside thenApply")
+                return@thenApplyAsync it.uppercase(Locale.getDefault())
+            }, executorService)
             .join()
 
         timeTaken()

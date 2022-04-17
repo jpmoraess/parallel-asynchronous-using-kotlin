@@ -41,8 +41,22 @@ class CompletableFutureHelloWorldTest {
     }
 
     @Test
-    fun helloworld_3_async_ustom_threadpool() {
+    fun helloworld_3_async_calls_log_async() {
+        val hiHelloWorld = cfhw.helloworld_3_async_calls_log_async()
+
+        assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", hiHelloWorld)
+    }
+
+    @Test
+    fun helloworld_3_async_custom_threadpool() {
         val hiHelloWorld = cfhw.helloworld_3_async_calls_custom_threadpool()
+
+        assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", hiHelloWorld)
+    }
+
+    @Test
+    fun helloworld_3_async_custom_threadpool_async() {
+        val hiHelloWorld = cfhw.helloworld_3_async_calls_custom_threadpool_async()
 
         assertEquals("HI COMPLETABLEFUTURE HELLO WORLD!", hiHelloWorld)
     }
