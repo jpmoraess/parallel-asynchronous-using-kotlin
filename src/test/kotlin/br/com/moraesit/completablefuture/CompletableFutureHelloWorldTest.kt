@@ -76,6 +76,13 @@ class CompletableFutureHelloWorldTest {
     }
 
     @Test
+    fun anyOf() {
+        val helloWorld = cfhw.anyOf()
+
+        assertEquals("hello world", helloWorld)
+    }
+
+    @Test
     fun lengthOfString() {
         val completableFuture = cfhw.lengthOfString()
 

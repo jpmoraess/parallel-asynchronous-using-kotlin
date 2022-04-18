@@ -1,6 +1,7 @@
 package br.com.moraesit.completablefuture
 
 import br.com.moraesit.service.HelloWorldService
+import br.com.moraesit.util.CommonUtil.Companion.delay
 import br.com.moraesit.util.CommonUtil.Companion.startTimer
 import br.com.moraesit.util.CommonUtil.Companion.timeTaken
 import java.util.*
@@ -158,6 +159,39 @@ class CompletableFutureHelloWorld {
     fun helloWorldThenCompose(): CompletableFuture<String> {
         return CompletableFuture.supplyAsync { hws.hello() }
             .thenCompose { prev -> hws.worldFuture(prev) }
+    }
+
+    fun anyOf(): String? {
+        // db call
+        val dbCall = CompletableFuture.supplyAsync {
+            delay(2050)
+            println("response from dbCall")
+            return@supplyAsync "hello world"
+        }
+
+        // rest call
+        val restCall = CompletableFuture.supplyAsync {
+            delay(2005)
+            println("response from restCall")
+            return@supplyAsync "hello world"
+        }
+
+        // soap call
+        val soapCall = CompletableFuture.supplyAsync {
+            delay(2300)
+            println("response from soapCall")
+            return@supplyAsync "hello world"
+        }
+
+        val cfList = listOf(dbCall, restCall, soapCall)
+
+        val anyOf = CompletableFuture.anyOf(*cfList.toTypedArray())
+
+        val result = anyOf.thenApply { v ->
+            if (v is String) return@thenApply v else return@thenApply null
+        }.join()
+
+        return result
     }
 
     fun lengthOfString(): CompletableFuture<String> {
