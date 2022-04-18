@@ -53,6 +53,22 @@ class MoviesClient(
             .collect(Collectors.toList())
     }
 
+    fun retrieveMovieList_CF_allOf(movieInfoIds: List<Long>): List<Movie> {
+        val movieFutures = movieInfoIds
+            .stream()
+            .map { retrieveMovie_CF(it) }
+            .collect(Collectors.toList())
+
+        val cfAllOf = CompletableFuture.allOf(*movieFutures.toTypedArray())
+
+        return cfAllOf.thenApply {
+            movieFutures
+                .stream()
+                .map { it.join() }
+                .collect(Collectors.toList())
+        }.join()
+    }
+
     private fun invokeMovieInfoService(movieInfoId: Long): MovieInfo {
         val moviesInfoUrlPath = "/v1/movie_infos/{movieInfoId}"
         return webClient
