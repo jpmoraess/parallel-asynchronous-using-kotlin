@@ -22,6 +22,13 @@ class MoviesClient(
         return Movie(movieInfo, review)
     }
 
+    fun retrieveMovies(movieInfoIds: List<Long>): List<Movie> {
+        return movieInfoIds
+            .stream()
+            .map { retrieveMovie(it) }
+            .collect(Collectors.toList())
+    }
+
     fun retrieveMovie_CF(movieInfoId: Long): CompletableFuture<Movie> {
         // movieInfo
         val movieInfoCF = CompletableFuture.supplyAsync { invokeMovieInfoService(movieInfoId) }
@@ -32,6 +39,18 @@ class MoviesClient(
         return movieInfoCF.thenCombine(reviewCF) { movieInfo, review ->
             return@thenCombine Movie(movieInfo, review)
         }
+    }
+
+    fun retrieveMovieList_CF(movieInfoIds: List<Long>): List<Movie> {
+        val movieFutures = movieInfoIds
+            .stream()
+            .map { retrieveMovie_CF(it) }
+            .collect(Collectors.toList())
+
+        return movieFutures
+            .stream()
+            .map { it.join() }
+            .collect(Collectors.toList())
     }
 
     private fun invokeMovieInfoService(movieInfoId: Long): MovieInfo {

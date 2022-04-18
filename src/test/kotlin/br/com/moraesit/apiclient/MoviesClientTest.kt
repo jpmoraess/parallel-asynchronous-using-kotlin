@@ -41,6 +41,26 @@ class MoviesClientTest {
     }
 
     @RepeatedTest(10)
+    fun retrieveMovies() {
+        startTimer()
+
+        // given
+        val movieInfoIds = listOf(1L, 2L, 3L, 4L, 5L, 6L, 7L)
+
+        // when
+        val movies = moviesClient.retrieveMovies(movieInfoIds)
+
+        println("movies: $movies")
+
+        timeTaken()
+        stopWatchReset()
+
+        // then
+        assertNotNull(movies)
+        assertEquals(7, movies.size)
+    }
+
+    @RepeatedTest(10)
     fun retrieveMovie_CF() {
         startTimer()
 
@@ -60,5 +80,25 @@ class MoviesClientTest {
         assertNotNull(movie)
         assertEquals("Batman Begins", movie.movieInfo!!.name)
         assert(movie.reviewList!!.size == 1)
+    }
+
+    @RepeatedTest(10)
+    fun retrieveMovieList_CF() {
+        startTimer()
+
+        // given
+        val movieInfoIds = listOf(1L, 2L, 3L, 4L, 5L, 6L, 7L)
+
+        // when
+        val movies = moviesClient.retrieveMovieList_CF(movieInfoIds)
+
+        println("movies: $movies")
+
+        timeTaken()
+        stopWatchReset()
+
+        // then
+        assertNotNull(movies)
+        assertEquals(7, movies.size)
     }
 }
