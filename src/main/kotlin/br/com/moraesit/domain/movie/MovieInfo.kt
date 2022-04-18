@@ -3,9 +3,9 @@ package br.com.moraesit.domain.movie
 import java.time.LocalDate
 
 data class MovieInfo(
-    val movieInfoId: String,
-    var name: String,
-    var year: Int,
-    var cast: List<String>,
-    var releaseDate: LocalDate,
+    var movieInfoId: String? = null,
+    var name: String? = null,
+    var year: Int? = null,
+    var cast: List<String>? = null,
+    var release_date: LocalDate? = null,
 )
