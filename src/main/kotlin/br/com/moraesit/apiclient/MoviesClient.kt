@@ -5,6 +5,7 @@ import br.com.moraesit.domain.movie.MovieInfo
 import br.com.moraesit.domain.movie.Review
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.util.UriComponentsBuilder
+import java.util.concurrent.CompletableFuture
 import java.util.stream.Collectors
 
 class MoviesClient(
@@ -19,6 +20,18 @@ class MoviesClient(
         val review = invokeReviewsService(movieInfoId)
 
         return Movie(movieInfo, review)
+    }
+
+    fun retrieveMovie_CF(movieInfoId: Long): CompletableFuture<Movie> {
+        // movieInfo
+        val movieInfoCF = CompletableFuture.supplyAsync { invokeMovieInfoService(movieInfoId) }
+
+        // review
+        val reviewCF = CompletableFuture.supplyAsync { invokeReviewsService(movieInfoId) }
+
+        return movieInfoCF.thenCombine(reviewCF) { movieInfo, review ->
+            return@thenCombine Movie(movieInfo, review)
+        }
     }
 
     private fun invokeMovieInfoService(movieInfoId: Long): MovieInfo {
